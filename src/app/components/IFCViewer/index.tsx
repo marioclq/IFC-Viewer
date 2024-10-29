@@ -83,17 +83,14 @@ export default function IFCViewer() {
         const indexer = components.get(OBC.IfcRelationsIndexer);
 
         await fragmentIfcLoader.setup();
+        fragmentIfcLoader.settings.wasm = {
+          path: "https://unpkg.com/web-ifc@0.0.57/",
+          absolute: true,
+        };
+
         components.init();
 
-        if (containerRef.current) {
-          world.renderer = new OBC.SimpleRenderer(
-            components,
-            containerRef.current as HTMLElement
-          );
-          world.camera = new OBC.SimpleCamera(components);
-        }
-
-        // world.camera.controls.setLookAt(12, 6, 8, 0, 0, -10);
+        world.camera.controls.setLookAt(12, 6, 8, 0, 0, -10);
 
         const grids = components.get(OBC.Grids);
         grids.create(world);
@@ -373,7 +370,7 @@ export default function IFCViewer() {
       {/* Toggle principal para mostrar/ocultar todo */}
       <div className="flex items-center">
         <span className="mr-3 text-sm font-medium text-gray-700">
-          {Object.values(categories).every(v => !v) ? 'Todo oculto' : 'Todo visible'}
+          {Object.values(categories).every(v => !v) ? 'Todo visible' : 'Todo oculto'}
         </span>
         <label className="relative inline-flex items-center cursor-pointer">
           <input
