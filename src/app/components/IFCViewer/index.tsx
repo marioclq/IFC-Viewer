@@ -53,7 +53,7 @@ export default function IFCViewer() {
         world.scene = new OBC.SimpleScene(components);
         world.renderer = new OBC.SimpleRenderer(
           components,
-          containerRef.current
+          containerRef.current as HTMLElement
         );
         world.camera = new OBC.SimpleCamera(components);
 
@@ -67,10 +67,12 @@ export default function IFCViewer() {
 
           // Configurar tamaño del renderer
           world.renderer.three.setPixelRatio(window.devicePixelRatio);
-          world.renderer.three.setSize(
-            containerRef.current.clientWidth,
-            containerRef.current.clientHeight
-          );
+          if (containerRef.current) {
+            world.renderer.three.setSize(
+              containerRef.current?.clientWidth ?? 0,
+              containerRef.current?.clientHeight ?? 0
+            );
+          }
         }
 
         // Inicializar componentes
@@ -83,7 +85,15 @@ export default function IFCViewer() {
         await fragmentIfcLoader.setup();
         components.init();
 
-        world.camera.controls.setLookAt(12, 6, 8, 0, 0, -10);
+        if (containerRef.current) {
+          world.renderer = new OBC.SimpleRenderer(
+            components,
+            containerRef.current as HTMLElement
+          );
+          world.camera = new OBC.SimpleCamera(components);
+        }
+
+        // world.camera.controls.setLookAt(12, 6, 8, 0, 0, -10);
 
         const grids = components.get(OBC.Grids);
         grids.create(world);
